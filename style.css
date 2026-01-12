@@ -1,0 +1,580 @@
+:root{
+    --color-primary: #8d99ae;
+    --color-secondary: #2b2d42;
+    --color-accent: #ef233c;
+    --color-text: #edf2f4;
+    --color-headingDarker: #025068;
+    --color-hgDarker: #080808;
+    --color-textAlt: #363499;
+    
+}
+.circular-image {
+    
+    border-radius: 100%; /* This makes the image circular */
+    border: 5px solid #111113; /* This adds a frame (black border) */
+    object-fit: cover; /* This ensures the image covers the area without distortion */
+}
+
+html {
+    font-size: 62.5%;
+    scroll-behavior: smooth;
+}
+
+body{
+background-image: url('background.jpg');
+background-repeat: no-repeat;
+background-attachment: fixed;
+background-size: cover;
+color: var(--color-text);
+font-family: 'Bebas Neue';
+height: 240vh;
+/* height:   ; */
+overflow-y: scroll;
+font-size: 2rem;
+scroll-snap-type: y mandatory;
+
+}
+section{
+    scroll-snap-align: start;
+    /* height: 100vh; */
+}
+
+.headings{
+    margin: 1rem;
+    font-size: 3rem;
+    font-family: 'Bebas Neue', cursive;
+}
+.text{
+    font-family: 'Bebas Neue';
+}
+.box{
+    border: var(--color-secondary) 2px solid;
+    width: 90%;
+    background: url('../images/backgroundBlur.webp');
+    margin: 5rem auto 10rem auto;
+    border-radius: 10px;
+    box-shadow: 0 0 5px 5px;
+
+}
+.boxTop{
+    height: 5rem;
+    visibility: hidden;
+}
+
+/* ==============================================Nav Bar */
+
+.navBar{
+    position: sticky;
+    /* display: none; */
+    /* font-family: 'Rubik Dirt', cursive; */
+    height: 4rem;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--color-hgDarker);
+    color: var(--color-heading);
+    flex-direction: row;
+    top: 0;
+    /* border-bottom: ridge 2px var(--color-text); */
+    z-index: 10;
+}
+
+.logo{
+    margin-left: 2rem;
+    margin-top: 0rem;
+    width: 15rem;
+    /* object-fit: cover; */
+}
+.navRight{
+    display: flex;
+    list-style: none;
+    align-items: center;
+    overflow: hidden;
+}
+.navLink{
+    text-decoration: none;
+    color: var(--color-heading);
+    padding: 1rem;
+}
+.navLink:hover{
+    transform: scale(1.1);
+    transition: all 0.2s;
+    text-decoration: underline;
+}
+/* .navRight a{
+    display: block;
+} */
+
+/* .show{
+    display: block;
+}
+.collapsible--expanded{
+    display: none;
+} */
+/* ABOUT----------------------------------------- */
+#about{
+    min-height: 50rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    
+}
+
+.details{
+    margin: 3rem 2rem 2rem 5rem;
+    overflow-y: hidden;
+    /* scrollbar-width: none; */
+    scrollbar-width: none;
+    color: var(--color-text);
+    width: 60%;
+    
+}
+.nextLine{
+    display: block;
+    color: var(--color-accent);
+}
+
+.text{
+    margin-left: 1.2rem;
+}
+.profilePic{
+    /* width: 30%; */
+    width: 90%;
+    /* margin-right: 3rem; */
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    /* opacity: 0.9; */
+    display: flex;
+    justify-content: center;
+    filter: grayscale(1.5);
+    /* border-radius: 50%; */
+    border-radius: 0%;
+}
+.profilePic:hover{
+    /* box-shadow: 0 0 1rem 0.5rem; */
+    transform: scale(1.05);
+    transition: all 0.3s;
+    opacity: 1;
+    filter: grayscale(0);
+}
+.profilePic > img{
+    /* border-radius: 50%; */
+    width: 50%;
+    /* width: 30%; */
+}
+
+/* ---------------Skills */
+/* @keyframes load{
+    from {
+      width: 0%
+    }
+}
+#skillDetails{
+    padding-left: 2rem;
+    display: flex;
+    flex-direction: column;
+}
+.skill{
+  background-color: #EEE;
+  padding: 0.2rem;
+  width: 80%;
+  margin: auto;
+  border-radius: 1rem;
+  margin-bottom: 1.5rem;
+  animation-name: load 2s 0s;
+  font-size: 2rem;
+  color: var(--color-text);
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+}
+.skill::before{
+    content:  attr(data-skill);
+    background-color: var(--color-textAlt);
+    display: inline-block;
+    padding: 1rem ;
+    border-radius: inherit;
+    animation: load 2s 0s;
+  }
+.skill.basic::before{
+    width: calc(40%);
+ }
+.skill.intermediate::before{
+    width: calc(70%);
+}
+.skill.advanced::before{
+    width: calc(95%);
+} */
+
+.skillsWrap{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+.skills{
+    height: 100px;
+    width: 120px;
+    margin:  5px;
+    justify-self: center;
+    align-self: center;    
+    background: transparent;
+    object-fit: contain;
+    overflow: hidden;
+}
+
+/*                      ----------------- Projects */
+.projects{
+    width: 90%;
+    display: grid;
+    min-height: 40rem;
+    grid-template-columns: auto auto;
+    margin: 4rem auto;
+    gap: 1rem;
+}
+.project{
+    
+    background: transparent;
+    
+    margin: 0rem 1rem;
+    object-fit: contain;
+    height: 95.3%   ;
+    /* border: 0.5rem solid var(--color-accent); */
+    /* box-shadow: 0 0 2px 2px var(--color-headingDarker); */
+
+}
+.project img{
+    width: 100%;
+}
+.project:hover{
+    transform: scale(1.03);
+    transition: all 0.3s;
+}
+
+    /* .description{
+        /* visibility: hidden; */
+        /* width: inherit;
+        display: none;
+    } */
+
+
+
+/* ======================Contacts */
+#contactBox{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+.profileTwo{
+    width: 50%;
+    
+}
+.profileTwo img{
+    width: 60%;
+    /* height: 80%; */
+    object-fit: cover;
+}
+.contactForm{
+    background: var(--color-headingDarker);
+    /* border: var(--color-headingDarker) groove 10px; */
+    display: flex;
+    width: 30%;
+    padding: 2rem;
+    margin: 2rem;
+    flex-direction: column;
+    border-radius: 4rem;
+    margin-right: 5%;
+    box-shadow:  0px 0px 8px 3px #898686;
+}
+
+.contactForm hr{
+    width: 90%;
+}
+    
+input, textarea, .submitForm{
+    padding: 0.8rem;
+    width: 80%;
+    background: var(--color-text);
+    border: var(--color-text) 2px ridge;
+    color:var(--color-secondary);
+    margin: 1rem;
+    /* width: 20    rem; */
+    border-radius: 10px;
+    max-width: 200px;
+}
+
+.submitForm{
+margin-left: 33.3%;
+width: auto;
+}
+.submitForm:hover{
+    background:var(--color-headingDarker);
+    color: var(--color-text);
+    box-shadow: 0 0 1px 1px;
+    transform: scale(1.1);
+}
+
+
+
+/* Top Button*/
+
+.top{
+    border-radius: 50%;
+    position: fixed;
+    display: none;
+    left: 9rem;
+    bottom: 7rem;
+    z-index: 20;
+    cursor: pointer;
+
+}
+.top:hover{
+    box-shadow:  0 0 5px 2px;
+}
+
+
+
+/* CONTACTS */
+.contact{
+    display: flex;
+    margin: 2rem 4rem;
+    list-style: none;
+    justify-content: center;
+    
+}
+
+/* ICONS */
+.icons{
+    padding-right: 2rem;
+    transform: scale(1.3);
+    margin-bottom: 3rem;   
+
+}
+.icons:hover{
+    transform: scale(1.7);   
+    transition: transfrom 0.8s;
+}
+
+
+
+/* MEDIA QUERIES */
+@media screen and (max-width:950px) {
+    .contactForm{
+        width: 35%;
+    }
+    .profileTwo{
+        /* width: 60%; */
+        object-fit: contain;
+        margin-left: 2rem;
+        
+    }
+    .profileTwo img{
+        width: 80%;
+    }
+}
+
+@media screen and (max-width:767px) {
+
+    /* nav */
+    .logo{
+        margin-left: 0.3rem;
+        width: 12rem;
+    }
+    .navRight{
+        /* flex-direction: column; */
+        /* margin-top: 10rem; */
+        margin-right: 1rem;
+        font-size: large;
+        padding: 1rem;
+    }   
+    /* Box */
+    .boxTop{
+        height: 1rem;
+    }
+    .box{
+        margin-bottom: 1.5rem;
+    }
+    
+    /* About section */
+    #about{
+        flex-direction: column-reverse;
+        position: relative;
+    }
+    .profilePic{
+        margin-top: 3rem;
+        width: 40%;
+        margin-right: 2rem;
+        border-radius: 0;
+    }
+
+    .profilePic > img{
+        border-radius: 0;
+        width: 100%;
+        
+    }
+    .headings{
+        font-weight: 100;
+    }
+    .details{
+        font-weight: 100;
+        margin: 3rem auto 2rem 3rem;
+        width: 90%;
+    }
+    .nextLine{
+        display: inline;
+    }
+    
+    
+    /* Projects section */
+    .projects{
+        grid-template-columns: auto;
+        width: 70%;
+    }
+    .project{
+        height: 80%;
+    }
+
+    /* Top Button */
+    .top{
+        left: 80%;
+        
+    }
+    /* Contact Form */
+    
+    .profileTwo{
+        display: none;
+    }
+    #contactBox{
+        justify-content: center;
+    }
+    .contactForm{
+        /* margin-right: 7%; */
+        margin-right:0 ;
+        width: 45%;
+    }
+}
+
+@media screen and (max-width:600px) {
+
+    /* Nav Bar */
+    /* box */
+    /* nav */
+    .logo{
+        margin-left: 0.3rem;
+        width: 10rem;
+    }
+    .navRight{
+        /* flex-direction: column; */
+        /* margin-top: 10rem; */
+        margin-right: 1rem;
+        font-size: medium;
+        padding: 0;
+    }   
+    .boxTop{
+        height: 0.5rem;
+    }
+    .box{
+        margin-bottom: 1rem;
+    }
+    /* skills */
+    #skillDetails{
+        padding-left: 1rem;
+    }
+    .skill{
+        width: 90%;
+    }
+    .skill.basic::before{
+        width: calc(30%);
+     }
+    .skill.intermediate::before{
+        width: calc(60%);
+    }
+    .skill.advanced::before{
+        width: calc(85%);
+    }
+    /* Contact Form */
+    .contactForm{
+        width: 90%;
+        margin: 2rem;
+    }
+
+    /* Project Image */
+    .projects{
+        width: 95%;
+    }
+
+    /* Submit button */
+    .submitForm{
+        margin-left: 40%;
+    }
+
+}
+@media screen  and (max-width:450px) {
+
+    /* skills */
+    #skillDetails{
+        padding-left: 0.5rem;
+    }
+    .skill{
+        width: 95%;
+    }
+    /* box */
+    .box{
+        margin-left: 4%;
+        
+    }
+   .details{
+    margin-left: 1rem;
+   }
+   .navBar{
+    width: 100%;
+   }
+}
+
+@media screen and (max-width:424px) {
+    /* nav */
+    .logo{
+        margin-left: 0.3rem;
+        width: 10rem;
+    }
+    .navRight{
+        /* flex-direction: column; */
+        /* margin-top: 10rem; */
+        margin-right: 0.3rem;
+        font-size: small;
+        padding: 0;
+    }   
+/* Contact icons */
+
+.icons{
+    transform: scale(1.2);
+}
+.icons:hover{
+    transform: scale(1.5);
+}
+}
+
+@media screen and (max-width:380px) {
+    /* nav */
+    .logo{
+        margin-left: 0.3rem;
+        width: 8rem;
+    }
+    .navRight{
+        
+        margin-right: 0rem;
+        font-size: x-small;
+        padding: 0;
+    }   
+}
+@media screen and (max-width:321px) {
+    .box{
+        margin-left: 10%;
+    }
+    .navBar{
+        width: 107%;
+    }
+    .contact    {
+        margin-left: 45%;
+    }
+}
