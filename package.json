@@ -1,0 +1,18 @@
+{
+  "name": "revolt-bike-search",
+  "version": "1.0.0",
+  "description": "Search Revolt bike prices by Hub Name",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm start",
+    "client": "cd client && npm start",
+    "build": "cd client && npm run build"
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  },
+  "keywords": ["revolt", "bike", "price", "search"],
+  "author": "",
+  "license": "MIT"
+}
