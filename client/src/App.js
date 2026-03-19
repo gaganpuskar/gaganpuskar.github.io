@@ -6,6 +6,9 @@ import ResultsTable from './components/ResultsTable';
 import LoadingSpinner from './components/LoadingSpinner';
 import ErrorMessage from './components/ErrorMessage';
 
+// API URL configuration - use environment variable or localhost for development
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [results, setResults] = useState([]);
@@ -18,7 +21,7 @@ function App() {
   useEffect(() => {
     const fetchHubs = async () => {
       try {
-        const response = await axios.get('/api/hubs');
+        const response = await axios.get(`${API_URL}/api/hubs`);
         if (response.data.success) {
           setSuggestions(response.data.data);
         }
@@ -41,7 +44,7 @@ function App() {
     setHasSearched(true);
 
     try {
-      const response = await axios.get('/api/search', {
+      const response = await axios.get(`${API_URL}/api/search`, {
         params: { hubName }
       });
 
