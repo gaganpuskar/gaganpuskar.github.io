@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const puppeteer = require('puppeteer');
 const { searchByHubName } = require('./utils/excelHandler');
 
 const app = express();
@@ -85,8 +86,11 @@ app.get('/api/health', (req, res) => {
 /**
  * POST /api/invoice-finder
  * Search for booking invoices by ID range and customer details
+ * Uses headless browser to scrape actual Revolt Motors booking pages
  */
 app.post('/api/invoice-finder', async (req, res) => {
+  let browser = null;
+
   try {
     const { startId, endId, searchType, searchValue } = req.body;
 
@@ -98,73 +102,162 @@ app.post('/api/invoice-finder', async (req, res) => {
       });
     }
 
-    if (parseInt(endId) - parseInt(startId) > 500) {
+    const start = parseInt(startId);
+    const end = parseInt(endId);
+
+    if (end < start) {
+      return res.status(400).json({
+        success: false,
+        error: 'End ID must be greater than or equal to Start ID'
+      });
+    }
+
+    if (end - start > 500) {
       return res.status(400).json({
         success: false,
         error: 'Range cannot exceed 500 IDs'
       });
     }
 
-    // Mock implementation - returns sample data for demonstration
-    // In production, this would actually scrape/query the Revolt Motors booking pages
-    const mockData = {
-      'REV001': { name: 'Raj Kumar', mobile: '9443515065', email: 'raj.kumar@email.com', model: 'RV400', price: '137050', hub: 'Revolt Hub Anna Nagar', bookingDate: '2023-01-15' },
-      'REV002': { name: 'Priya Singh', mobile: '9876543210', email: 'priya.singh@email.com', model: 'RV400', price: '139200', hub: 'Revolt Hub Bangalore', bookingDate: '2023-02-20' },
-      'REV003': { name: 'Kumaran Sivanandham', mobile: '9123456789', email: 'kumaran.s@email.com', model: 'RV300', price: '107050', hub: 'Revolt Hub Chennai', bookingDate: '2023-03-10' },
-      'REV004': { name: 'Anita Sharma', mobile: '8765432109', email: 'anita.sharma@email.com', model: 'RV400', price: '140000', hub: 'Revolt Hub Mumbai', bookingDate: '2023-04-05' },
-      'REV005': { name: 'Vikram Patel', mobile: '9012345678', email: 'vikram.p@email.com', model: 'RV400', price: '138500', hub: 'Revolt Hub Pune', bookingDate: '2023-05-12' }
+    console.log(`\n🔍 Searching from ${start} to ${end} by ${searchType}: ${searchValue}`);
+
+    // Launch browser
+    browser = await puppeteer.launch({
+      headless: 'new',
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
+      timeout: 30000
+    });
+
+    const page = await browser.newPage();
+    page.setDefaultTimeout(15000);
+    page.setDefaultNavigationTimeout(15000);
+
+    let foundInvoices = [];
+    const baseUrl = 'https://www.revoltmotors.com/thankyoubooking';
+
+    // Helper function to extract data from booking page
+    const fetchAndParseBooking = async (bookingId) => {
+      try {
+        const url = `${baseUrl}/${bookingId}`;
+        console.log(`  ▶ Checking: ${bookingId}...`);
+
+        // Navigate to page
+        await page.goto(url, { 
+          waitUntil: 'networkidle2',
+          timeout: 12000 
+        });
+
+        // Wait for page to load and extract all text
+        const pageData = await page.evaluate(() => {
+          const text = document.body.innerText;
+          const html = document.body.innerHTML;
+          
+          // Extract phone numbers (Indian mobile number pattern)
+          const phoneMatch = text.match(/\b9\d{9}\b/);
+          
+          // Extract emails
+          const emailMatch = text.match(/\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b/);
+          
+          // Extract name (look for customer/name labels and get next substantial text)
+          let name = '';
+          if (text.match(/(?:Name|Customer Name)[:\s]([A-Za-z\s]+)/i)) {
+            name = text.match(/(?:Name|Customer Name)[:\s]([A-Za-z\s]+)/i)[1].trim();
+          }
+
+          // Extract model (RV300, RV400, etc)
+          const modelMatch = text.match(/\b(RV\d{3,4})\b/i);
+          
+          // Extract price
+          const priceMatch = text.match(/₹\s*([\d,]+)|(\d+)\s*(?:INR|rupee)/i);
+
+          return {
+            name: name || 'N/A',
+            phone: phoneMatch ? phoneMatch[0] : '',
+            email: emailMatch ? emailMatch[0] : '',
+            model: modelMatch ? modelMatch[1] : 'N/A',
+            price: priceMatch ? priceMatch[1] || priceMatch[2] : 'N/A',
+            fullText: text.substring(0, 500)
+          };
+        });
+
+        // Only return if we found some data
+        if (pageData.phone || pageData.email || pageData.name !== 'N/A') {
+          return {
+            bookingId: String(bookingId),
+            name: pageData.name,
+            mobile: pageData.phone,
+            email: pageData.email,
+            model: pageData.model,
+            price: pageData.price,
+            hub: 'N/A',
+            bookingDate: new Date().toISOString().split('T')[0]
+          };
+        }
+
+        return null;
+
+      } catch (error) {
+        // Page not found or error - continue to next
+        return null;
+      }
     };
 
-    // Search through mock data
-    let foundInvoices = [];
-    
-    for (let i = startId; i <= endId; i++) {
-      const bookingId = `REV${String(i).padStart(3, '0')}`;
-      const invoice = mockData[bookingId];
-      
-      if (invoice) {
-        // Check if invoice matches search criteria
-        let matches = false;
-        
-        if (searchType === 'phone') {
-          matches = invoice.mobile.includes(searchValue.replace(/\D/g, ''));
-        } else if (searchType === 'name') {
-          matches = invoice.name.toLowerCase().includes(searchValue.toLowerCase());
-        } else if (searchType === 'email') {
-          matches = invoice.email.toLowerCase().includes(searchValue.toLowerCase());
-        }
+    // Process bookings in the range - stop after finding first match
+    for (let i = start; i <= end; i++) {
+      try {
+        const bookingData = await fetchAndParseBooking(i);
 
-        if (matches) {
-          foundInvoices.push({
-            bookingId,
-            ...invoice,
-            invoiceUrl: `https://www.revoltmotors.com/thankyoubooking/${bookingId}`
-          });
+        if (bookingData) {
+          // Check if booking matches search criteria
+          let matches = false;
+
+          if (searchType === 'phone') {
+            const searchDigits = searchValue.replace(/\D/g, '');
+            matches = bookingData.mobile.replace(/\D/g, '').includes(searchDigits);
+          } else if (searchType === 'name') {
+            matches = bookingData.name.toLowerCase().includes(searchValue.toLowerCase());
+          } else if (searchType === 'email') {
+            matches = bookingData.email.toLowerCase().includes(searchValue.toLowerCase());
+          }
+
+          if (matches) {
+            foundInvoices.push({
+              ...bookingData,
+              invoiceUrl: `${baseUrl}/${bookingData.bookingId}`
+            });
+            console.log(`✓ MATCH FOUND: ${bookingData.bookingId}`);
+            break; // Stop after first match
+          }
         }
+      } catch (err) {
+        console.error(`  ✗ Error checking ${i}:`, err.message);
+        continue;
       }
     }
+
+    await browser.close();
 
     if (foundInvoices.length === 0) {
       return res.json({
         success: true,
         found: false,
-        message: 'No matching invoices found in the specified range'
+        message: 'No matching invoices found in the specified range',
+        searchedIds: { start, end }
       });
     }
 
-    // Return first match or all matches
     const firstMatch = foundInvoices[0];
-    
+
     res.json({
       success: true,
       found: true,
       bookingId: firstMatch.bookingId,
-      name: firstMatch.name,
-      mobile: firstMatch.mobile,
-      email: firstMatch.email,
-      model: firstMatch.model,
-      price: firstMatch.price,
-      hub: firstMatch.hub,
+      name: firstMatch.name || 'N/A',
+      mobile: firstMatch.mobile || 'N/A',
+      email: firstMatch.email || 'N/A',
+      model: firstMatch.model || 'N/A',
+      price: firstMatch.price || 'N/A',
+      hub: firstMatch.hub || 'N/A',
       bookingDate: firstMatch.bookingDate,
       invoiceUrl: firstMatch.invoiceUrl,
       allMatches: foundInvoices,
@@ -172,10 +265,19 @@ app.post('/api/invoice-finder', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Invoice finder error:', error);
+    console.error('🔴 Invoice finder error:', error.message);
+    
+    if (browser) {
+      try {
+        await browser.close();
+      } catch (e) {
+        console.error('Error closing browser:', e.message);
+      }
+    }
+
     res.status(500).json({
       success: false,
-      error: 'Error searching for invoices'
+      error: 'Error searching for invoices: ' + error.message
     });
   }
 });

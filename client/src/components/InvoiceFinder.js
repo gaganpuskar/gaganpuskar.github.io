@@ -68,7 +68,7 @@ function InvoiceFinder({ apiUrl }) {
     <div className="invoice-finder-container">
       <div className="invoice-finder-card">
         <h2>🔍 Invoice Finder</h2>
-        <p className="subtitle">Find and download your booking invoice</p>
+        <p className="subtitle">Find booking invoices by ID range from Revolt Motors</p>
 
         <form onSubmit={handleSearch} className="invoice-form">
           {/* ID Range Section */}
@@ -215,11 +215,12 @@ function InvoiceFinder({ apiUrl }) {
         <div className="info-section">
           <h4>ℹ️ How to use:</h4>
           <ul>
-            <li>Enter the booking ID range (max 500 IDs)</li>
-            <li>Select search criteria (Phone, Name, or Email)</li>
-            <li>Enter your information</li>
-            <li>Bot will scan all bookings and find your invoice</li>
-            <li>Download your invoice instantly</li>
+            <li>Get your booking ID from the URL: revoltmotors.com/thankyoubooking/<b>600445</b></li>
+            <li>Enter the ID range (e.g., 600445 to 600600)</li>
+            <li>Select search type: Phone, Name, or Email</li>
+            <li>Bot scans each booking page and matches your details</li>
+            <li>Click "Download Invoice" to open your booking page</li>
+            <li>Max range: 500 IDs per search</li>
           </ul>
         </div>
       </div>
