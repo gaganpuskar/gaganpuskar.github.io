@@ -1,22 +1,20 @@
-const XLSX = require('xlsx');
 const path = require('path');
+const fs = require('fs');
 
-// Path to Excel file - can be overridden by environment variable
-const EXCEL_FILE = process.env.EXCEL_FILE || path.join(__dirname, '../../data/bikes.xlsx');
+// Path to JSON file - can be overridden by environment variable
+const DATA_FILE = process.env.DATA_FILE || path.join(__dirname, '../../data/bikes.json');
 
 /**
- * Read Excel file and return parsed data
+ * Read JSON file and return parsed data
  */
-function readExcelFile() {
+function readDataFile() {
   try {
-    const workbook = XLSX.readFile(EXCEL_FILE);
-    const sheetName = workbook.SheetNames[0];
-    const worksheet = workbook.Sheets[sheetName];
-    const data = XLSX.utils.sheet_to_json(worksheet);
+    const rawData = fs.readFileSync(DATA_FILE, 'utf8');
+    const data = JSON.parse(rawData);
     return data;
   } catch (error) {
-    console.error('Error reading Excel file:', error.message);
-    throw new Error('Failed to read Excel file');
+    console.error('Error reading data file:', error.message);
+    throw new Error('Failed to read data file');
   }
 }
 
@@ -27,7 +25,7 @@ function readExcelFile() {
  */
 function searchByHubName(hubName) {
   try {
-    const data = readExcelFile();
+    const data = readDataFile();
     const searchTerm = hubName.toLowerCase().trim();
 
     const results = data.filter(row => {
@@ -61,12 +59,12 @@ function searchByHubName(hubName) {
 }
 
 /**
- * Get all unique hub names from Excel file
+ * Get all unique hub names from data file
  * @returns {Array} Array of unique hub names
  */
 function getAllHubs() {
   try {
-    const data = readExcelFile();
+    const data = readDataFile();
     const hubs = new Set();
 
     data.forEach(row => {
@@ -88,7 +86,7 @@ function getAllHubs() {
  */
 function getStatistics() {
   try {
-    const data = readExcelFile();
+    const data = readDataFile();
     const stats = {
       totalRecords: data.length,
       totalHubs: new Set(data.map(r => r['Hub Name'])).size,
@@ -103,7 +101,6 @@ function getStatistics() {
 }
 
 module.exports = {
-  readExcelFile,
   searchByHubName,
   getAllHubs,
   getStatistics

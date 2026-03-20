@@ -34,6 +34,7 @@ function ResultsTable({ results }) {
               <th>Helmet</th>
               <th>Accessories</th>
               <th>On-Road Price</th>
+              <th>Model</th>
             </tr>
           </thead>
           <tbody>
@@ -55,6 +56,7 @@ function ResultsTable({ results }) {
                 <td className="cell-price">{formatPrice(bike.helmet)}</td>
                 <td className="cell-price">{formatPrice(bike.accessories)}</td>
                 <td className="cell-price-highlight">{formatPrice(bike.onRoadPrice)}</td>
+                <td className="cell-model">{bike.model}</td>
               </tr>
             ))}
           </tbody>
