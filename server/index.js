@@ -121,12 +121,19 @@ app.post('/api/invoice-finder', async (req, res) => {
 
     console.log(`\n🔍 Searching from ${start} to ${end} by ${searchType}: ${searchValue}`);
 
-    // Launch browser
-    browser = await puppeteer.launch({
+    // Launch browser - configure for both local and cloud environments
+    const launchOptions = {
       headless: 'new',
       args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
       timeout: 30000
-    });
+    };
+
+    // On Render.com, use the cache directory
+    if (process.env.NODE_ENV === 'production') {
+      launchOptions.timeout = 60000; // Longer timeout for cloud
+    }
+
+    browser = await puppeteer.launch(launchOptions);
 
     const page = await browser.newPage();
     page.setDefaultTimeout(15000);
