@@ -41,7 +41,6 @@ function searchByHubName(hubName) {
       state: row['State'] || 'N/A',
       city: row['City'] || 'N/A',
       model: row['Model'] || 'N/A',
-      orpPrice: row['ORP'] || row['Original Retail Price'] || 'N/A',
       exShowroomPrice: row['Ex-Showroom Price'] || 'N/A',
       empsBenefit: row['EMPS Benefit'] || 'N/A',
       additionalDiscount: row['Additional Discount'] || 'N/A',

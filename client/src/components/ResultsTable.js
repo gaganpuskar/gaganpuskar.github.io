@@ -22,7 +22,6 @@ function ResultsTable({ results }) {
               <th>State</th>
               <th>City</th>
               <th>Model</th>
-              <th>ORP</th>
               <th>Ex-Showroom</th>
               <th>EMPS Benefit</th>
               <th>Additional Discount</th>
@@ -44,7 +43,6 @@ function ResultsTable({ results }) {
                 <td>{bike.state}</td>
                 <td>{bike.city}</td>
                 <td className="cell-model">{bike.model}</td>
-                <td className="cell-price">{formatPrice(bike.orpPrice)}</td>
                 <td className="cell-price">{formatPrice(bike.exShowroomPrice)}</td>
                 <td className="cell-price">{formatPrice(bike.empsBenefit)}</td>
                 <td className="cell-price">{formatPrice(bike.additionalDiscount)}</td>
