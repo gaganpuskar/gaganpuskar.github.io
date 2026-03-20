@@ -3,7 +3,7 @@ import axios from 'axios';
 import '../styles/InvoiceFinder.css';
 
 function InvoiceFinder({ apiUrl }) {
-  const [vinNumber, setVinNumber] = useState('');
+  const [bookingId, setBookingId] = useState('');
   const [searchType, setSearchType] = useState('phone');
   const [searchValue, setSearchValue] = useState('');
   const [loading, setLoading] = useState(false);
@@ -12,28 +12,17 @@ function InvoiceFinder({ apiUrl }) {
 
   const API_BASE_URL = apiUrl || 'https://revolt-backend-j7j9.onrender.com' || 'http://localhost:5000';
 
-  const extractBookingId = (vin) => {
-    // Extract last 5-6 digits from VIN (e.g., RV26C188099 -> 88099)
-    const match = vin.match(/(\d{5,6})$/);
-    if (!match) {
-      throw new Error('Invalid VIN format. Expected: RV26C1 + 5-6 digits (e.g., RV26C188099)');
-    }
-    
-    const vinSuffix = parseInt(match[1]);
-    
-    // Formula: Booking URL ID = Base (512004) + VIN Suffix
-    // Example: RV26C188099 -> 88099 -> 512004 + 88099 = 600103
-    const BASE_BOOKING_ID = 512004;
-    const bookingId = BASE_BOOKING_ID + vinSuffix;
-    
-    return bookingId;
-  };
-
   const handleSearch = async (e) => {
     e.preventDefault();
     
-    if (!vinNumber.trim() || !searchValue.trim()) {
-      setError('Please enter VIN and search value');
+    if (!bookingId.trim() || !searchValue.trim()) {
+      setError('Please enter Booking ID and search value');
+      return;
+    }
+
+    const bid = parseInt(bookingId);
+    if (isNaN(bid)) {
+      setError('Booking ID must be a number');
       return;
     }
 
@@ -42,14 +31,10 @@ function InvoiceFinder({ apiUrl }) {
     setResults(null);
 
     try {
-      // Calculate booking ID from VIN
-      const bookingId = extractBookingId(vinNumber.trim());
-      console.log(`VIN: ${vinNumber} -> Booking ID: ${bookingId}`);
-
-      // Call API with single booking ID
+      // Call API with the booking ID
       const response = await axios.post(`${API_BASE_URL}/api/invoice-finder`, {
-        startId: bookingId,
-        endId: bookingId,
+        startId: bid,
+        endId: bid,
         searchType: searchType,
         searchValue: searchValue.toLowerCase().trim()
       });
@@ -57,19 +42,14 @@ function InvoiceFinder({ apiUrl }) {
       if (response.data.found) {
         setResults({
           ...response.data,
-          vinNumber: vinNumber,
-          bookingUrl: `https://www.revoltmotors.com/thankyoubooking/${bookingId}`
+          bookingUrl: `https://www.revoltmotors.com/thankyoubooking/${bid}`
         });
       } else {
         setError(`No match found for ${searchType}: ${searchValue}`);
       }
     } catch (err) {
       console.error('Search error:', err);
-      if (err.message.includes('Invalid VIN')) {
-        setError(err.message);
-      } else {
-        setError(err.response?.data?.error || err.message || 'Error searching invoice');
-      }
+      setError(err.response?.data?.error || err.message || 'Error searching invoice');
     } finally {
       setLoading(false);
     }
@@ -89,26 +69,25 @@ function InvoiceFinder({ apiUrl }) {
       <div className="invoice-finder-card">
         <div className="finder-header">
           <h2>🔍 Revolt Invoice Finder</h2>
-          <p>Find your booking invoice using VIN number</p>
+          <p>Find your booking invoice using Booking ID</p>
         </div>
 
         {error && <div className="error-message">❌ {error}</div>}
 
         <form onSubmit={handleSearch} className="finder-form">
-          {/* VIN Input */}
+          {/* Booking ID Input */}
           <div className="form-section">
-            <label htmlFor="vin"><strong>VIN/Model Number</strong></label>
+            <label htmlFor="bookingId"><strong>Booking ID</strong></label>
             <input
-              id="vin"
-              type="text"
-              placeholder="e.g., RV26C188099"
-              value={vinNumber}
-              onChange={(e) => setVinNumber(e.target.value.toUpperCase())}
+              id="bookingId"
+              type="number"
+              placeholder="e.g., 600103"
+              value={bookingId}
+              onChange={(e) => setBookingId(e.target.value)}
               disabled={loading}
-              maxLength={20}
-              className="vin-input"
+              className="booking-input"
             />
-            <small>📝 Format: RV26C1 + 5-6 digit number (e.g., RV26C188099)</small>
+            <small>📝 Enter your booking ID from the URL</small>
           </div>
 
           {/* Search Type Selection */}
@@ -190,10 +169,6 @@ function InvoiceFinder({ apiUrl }) {
                 <span className="value">{results.bookingId}</span>
               </div>
               <div className="detail-row">
-                <span className="label">VIN:</span>
-                <span className="value">{results.vinNumber}</span>
-              </div>
-              <div className="detail-row">
                 <span className="label">Name:</span>
                 <span className="value">{results.name || 'N/A'}</span>
               </div>
@@ -227,7 +202,7 @@ function InvoiceFinder({ apiUrl }) {
               <button 
                 onClick={() => {
                   setResults(null);
-                  setVinNumber('');
+                  setBookingId('');
                   setSearchValue('');
                 }}
                 className="new-search-button"
@@ -242,13 +217,13 @@ function InvoiceFinder({ apiUrl }) {
         <div className="info-section">
           <h4>ℹ️ How to use:</h4>
           <ol>
-            <li>Find your <strong>VIN/Model Number</strong> (e.g., <code>RV26C188099</code>)</li>
-            <li>Select what you want to search (Phone, Name, or Email)</li>
+            <li>Get your <strong>Booking ID</strong> from the URL</li>
+            <li>Select search type (Phone, Name, or Email)</li>
             <li>Enter your details</li>
             <li>Click "Find Invoice"</li>
             <li>Download your booking confirmation!</li>
           </ol>
-          <p><strong>Note:</strong> Works with any Revolt model following the VIN pattern.</p>
+          <p><strong>Example URL:</strong> https://www.revoltmotors.com/thankyoubooking/<code>600103</code></p>
         </div>
       </div>
     </div>
