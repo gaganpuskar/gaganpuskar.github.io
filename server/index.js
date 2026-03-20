@@ -77,10 +77,30 @@ app.get('/api/hubs', (req, res) => {
 
 /**
  * GET /api/health
- * Health check endpoint
+ * Health check endpoint with Chrome diagnostics
  */
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', timestamp: new Date().toISOString() });
+app.get('/api/health', async (req, res) => {
+  const healthData = {
+    status: 'OK',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development',
+    nodeVersion: process.version,
+    puppeteerVersion: require('puppeteer/package.json').version,
+    cacheDir: process.env.PUPPETEER_CACHE_DIR || 'default'
+  };
+
+  // Try to detect Chrome executable
+  try {
+    const browserFetcher = puppeteer.createBrowserFetcher();
+    const revisions = await browserFetcher.localRevisions();
+    healthData.chromeInstalled = revisions.length > 0;
+    healthData.localChromeRevisions = revisions;
+  } catch (e) {
+    healthData.chromeInstalled = false;
+    healthData.chromeError = e.message;
+  }
+
+  res.json(healthData);
 });
 
 /**
@@ -124,16 +144,28 @@ app.post('/api/invoice-finder', async (req, res) => {
     // Launch browser - configure for both local and cloud environments
     const launchOptions = {
       headless: 'new',
-      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu', '--disable-dev-shm-usage'],
       timeout: 30000
     };
 
     // On Render.com, use the cache directory
     if (process.env.NODE_ENV === 'production') {
       launchOptions.timeout = 60000; // Longer timeout for cloud
+      // Set cache directory for Puppeteer in production
+      if (process.env.PUPPETEER_CACHE_DIR) {
+        launchOptions.cacheDirectory = process.env.PUPPETEER_CACHE_DIR;
+      }
     }
 
-    browser = await puppeteer.launch(launchOptions);
+    console.log(`Launching browser with options:`, JSON.stringify(launchOptions, null, 2));
+    
+    try {
+      browser = await puppeteer.launch(launchOptions);
+      console.log('✅ Browser launched successfully');
+    } catch (browserError) {
+      console.error('❌ Failed to launch browser:', browserError.message);
+      throw new Error(`Browser launch failed: ${browserError.message}`);
+    }
 
     const page = await browser.newPage();
     page.setDefaultTimeout(15000);
