@@ -158,10 +158,26 @@ app.post('/api/invoice-finder', async (req, res) => {
           // Extract emails
           const emailMatch = text.match(/\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b/);
           
-          // Extract name (look for customer/name labels and get next substantial text)
+          // Extract name - look for "Name" label and get the next word(s) up to newline or specific keywords
           let name = '';
-          if (text.match(/(?:Name|Customer Name)[:\s]([A-Za-z\s]+)/i)) {
-            name = text.match(/(?:Name|Customer Name)[:\s]([A-Za-z\s]+)/i)[1].trim();
+          const nameLines = text.split('\n');
+          for (let i = 0; i < nameLines.length; i++) {
+            const line = nameLines[i];
+            if (line.match(/^Name\s*$/i) || line.match(/^Name\s+(.+)/i)) {
+              // If "Name" is alone on a line, next line has the name
+              if (line.match(/^Name\s*$/i) && i + 1 < nameLines.length) {
+                name = nameLines[i + 1].trim();
+              } else {
+                // "Name" and value on same line
+                const match = line.match(/^Name\s+(.+)/i);
+                if (match) {
+                  name = match[1].trim();
+                }
+              }
+              // Clean up: remove anything after common keywords
+              name = name.split(/\s*(Email|Phone|Mobile|Address|Hub|Status|ID|Pincode)/i)[0].trim();
+              if (name) break;
+            }
           }
 
           // Extract model (RV300, RV400, etc)
