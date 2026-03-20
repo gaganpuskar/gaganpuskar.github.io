@@ -3,8 +3,7 @@ import axios from 'axios';
 import '../styles/InvoiceFinder.css';
 
 function InvoiceFinder({ apiUrl }) {
-  const [startId, setStartId] = useState('');
-  const [endId, setEndId] = useState('');
+  const [vinNumber, setVinNumber] = useState('');
   const [searchType, setSearchType] = useState('phone');
   const [searchValue, setSearchValue] = useState('');
   const [loading, setLoading] = useState(false);
@@ -13,21 +12,28 @@ function InvoiceFinder({ apiUrl }) {
 
   const API_BASE_URL = apiUrl || 'https://revolt-backend-j7j9.onrender.com' || 'http://localhost:5000';
 
+  const extractBookingId = (vin) => {
+    // Extract last 5-6 digits from VIN (e.g., RV26C188099 -> 88099)
+    const match = vin.match(/(\d{5,6})$/);
+    if (!match) {
+      throw new Error('Invalid VIN format. Expected: RV26C1 + 5-6 digits (e.g., RV26C188099)');
+    }
+    
+    const vinSuffix = parseInt(match[1]);
+    
+    // Formula: Booking URL ID = Base (512004) + VIN Suffix
+    // Example: RV26C188099 -> 88099 -> 512004 + 88099 = 600103
+    const BASE_BOOKING_ID = 512004;
+    const bookingId = BASE_BOOKING_ID + vinSuffix;
+    
+    return bookingId;
+  };
+
   const handleSearch = async (e) => {
     e.preventDefault();
     
-    if (!startId || !endId || !searchValue) {
-      setError('Please fill all fields');
-      return;
-    }
-
-    if (parseInt(endId) < parseInt(startId)) {
-      setError('End ID must be greater than Start ID');
-      return;
-    }
-
-    if (parseInt(endId) - parseInt(startId) > 500) {
-      setError('Range cannot exceed 500 IDs');
+    if (!vinNumber.trim() || !searchValue.trim()) {
+      setError('Please enter VIN and search value');
       return;
     }
 
@@ -36,115 +42,126 @@ function InvoiceFinder({ apiUrl }) {
     setResults(null);
 
     try {
+      // Calculate booking ID from VIN
+      const bookingId = extractBookingId(vinNumber.trim());
+      console.log(`VIN: ${vinNumber} -> Booking ID: ${bookingId}`);
+
+      // Call API with single booking ID
       const response = await axios.post(`${API_BASE_URL}/api/invoice-finder`, {
-        startId: parseInt(startId),
-        endId: parseInt(endId),
+        startId: bookingId,
+        endId: bookingId,
         searchType: searchType,
         searchValue: searchValue.toLowerCase().trim()
       });
 
       if (response.data.found) {
-        setResults(response.data);
+        setResults({
+          ...response.data,
+          vinNumber: vinNumber,
+          bookingUrl: `https://www.revoltmotors.com/thankyoubooking/${bookingId}`
+        });
       } else {
-        setError('No matching invoice found in the specified range');
+        setError(`No match found for ${searchType}: ${searchValue}`);
       }
     } catch (err) {
       console.error('Search error:', err);
-      setError(err.response?.data?.error || 'Error searching for invoice');
+      if (err.message.includes('Invalid VIN')) {
+        setError(err.message);
+      } else {
+        setError(err.response?.data?.error || err.message || 'Error searching invoice');
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDownload = () => {
-    if (results && results.bookingId) {
-      const url = `https://www.revoltmotors.com/thankyoubooking/${results.bookingId}`;
-      // Open in new tab for PDF download
-      window.open(url, '_blank');
-    }
+  const getPlaceholder = () => {
+    const placeholders = {
+      phone: '9876543210',
+      name: 'John Doe',
+      email: 'john@example.com'
+    };
+    return placeholders[searchType] || '';
   };
 
   return (
     <div className="invoice-finder-container">
       <div className="invoice-finder-card">
-        <h2>🔍 Invoice Finder</h2>
-        <p className="subtitle">Find booking invoices by ID range from Revolt Motors</p>
+        <div className="finder-header">
+          <h2>🔍 Revolt Invoice Finder</h2>
+          <p>Find your booking invoice using VIN number</p>
+        </div>
 
-        <form onSubmit={handleSearch} className="invoice-form">
-          {/* ID Range Section */}
+        {error && <div className="error-message">❌ {error}</div>}
+
+        <form onSubmit={handleSearch} className="finder-form">
+          {/* VIN Input */}
           <div className="form-section">
-            <h3>Booking ID Range</h3>
-            <div className="input-row">
-              <div className="input-group">
-                <label>Start Booking ID</label>
-                <input
-                  type="number"
-                  placeholder="e.g., 600445"
-                  value={startId}
-                  onChange={(e) => setStartId(e.target.value)}
-                  disabled={loading}
-                />
-              </div>
-              <div className="input-group">
-                <label>End Booking ID</label>
-                <input
-                  type="number"
-                  placeholder="e.g., 600900"
-                  value={endId}
-                  onChange={(e) => setEndId(e.target.value)}
-                  disabled={loading}
-                />
-              </div>
-            </div>
+            <label htmlFor="vin"><strong>VIN/Model Number</strong></label>
+            <input
+              id="vin"
+              type="text"
+              placeholder="e.g., RV26C188099"
+              value={vinNumber}
+              onChange={(e) => setVinNumber(e.target.value.toUpperCase())}
+              disabled={loading}
+              maxLength={20}
+              className="vin-input"
+            />
+            <small>📝 Format: RV26C1 + 5-6 digit number (e.g., RV26C188099)</small>
           </div>
 
-          {/* Search Type Section */}
+          {/* Search Type Selection */}
           <div className="form-section">
-            <h3>Search By</h3>
+            <label><strong>Search By</strong></label>
             <div className="radio-group">
-              <label>
+              <label className="radio-option">
                 <input
                   type="radio"
+                  name="searchType"
                   value="phone"
                   checked={searchType === 'phone'}
                   onChange={(e) => setSearchType(e.target.value)}
                   disabled={loading}
                 />
-                Mobile Number
+                <span>📱 Mobile Number</span>
               </label>
-              <label>
+              <label className="radio-option">
                 <input
                   type="radio"
+                  name="searchType"
                   value="name"
                   checked={searchType === 'name'}
                   onChange={(e) => setSearchType(e.target.value)}
                   disabled={loading}
                 />
-                Customer Name
+                <span>👤 Customer Name</span>
               </label>
-              <label>
+              <label className="radio-option">
                 <input
                   type="radio"
+                  name="searchType"
                   value="email"
                   checked={searchType === 'email'}
                   onChange={(e) => setSearchType(e.target.value)}
                   disabled={loading}
                 />
-                Email Address
+                <span>✉️ Email Address</span>
               </label>
             </div>
           </div>
 
-          {/* Search Value Section */}
+          {/* Search Value Input */}
           <div className="form-section">
-            <h3>Enter Your {searchType === 'phone' ? 'Mobile Number' : searchType === 'name' ? 'Name' : 'Email'}</h3>
+            <label htmlFor="searchValue"><strong>
+              {searchType === 'phone' && 'Your Mobile Number'}
+              {searchType === 'name' && 'Customer Name'}
+              {searchType === 'email' && 'Email Address'}
+            </strong></label>
             <input
+              id="searchValue"
               type="text"
-              placeholder={
-                searchType === 'phone' ? '9443515065' : 
-                searchType === 'name' ? 'kumaran sivanandham' : 
-                'your@email.com'
-              }
+              placeholder={getPlaceholder()}
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
               disabled={loading}
@@ -152,76 +169,86 @@ function InvoiceFinder({ apiUrl }) {
             />
           </div>
 
-          {/* Error Display */}
-          {error && <div className="error-message">{error}</div>}
-
-          {/* Search Button */}
+          {/* Submit Button */}
           <button 
             type="submit" 
-            disabled={loading}
             className="search-button"
+            disabled={loading}
           >
-            {loading ? (
-              <>
-                <span className="spinner"></span> Searching ({endId ? parseInt(endId) - parseInt(startId) + 1 : 0} bookings)...
-              </>
-            ) : (
-              '🔎 Find Invoice'
-            )}
+            {loading ? '🔄 Searching...' : '🔎 Find Invoice'}
           </button>
         </form>
 
-        {/* Results Display */}
+        {/* Results */}
         {results && (
           <div className="results-section">
-            <h3>✅ Invoice Found!</h3>
-            <div className="invoice-details">
+            <div className="success-message">✅ Booking Found!</div>
+            
+            <div className="result-details">
+              <div className="detail-row">
+                <span className="label">Booking ID:</span>
+                <span className="value">{results.bookingId}</span>
+              </div>
+              <div className="detail-row">
+                <span className="label">VIN:</span>
+                <span className="value">{results.vinNumber}</span>
+              </div>
               <div className="detail-row">
                 <span className="label">Name:</span>
-                <span className="value">{results.name}</span>
+                <span className="value">{results.name || 'N/A'}</span>
               </div>
               <div className="detail-row">
                 <span className="label">Mobile:</span>
-                <span className="value">{results.mobile}</span>
+                <span className="value">{results.mobile || 'N/A'}</span>
               </div>
               <div className="detail-row">
                 <span className="label">Email:</span>
-                <span className="value">{results.email}</span>
+                <span className="value">{results.email || 'N/A'}</span>
               </div>
               <div className="detail-row">
-                <span className="label">Bike Model:</span>
-                <span className="value">{results.model}</span>
+                <span className="label">Model:</span>
+                <span className="value">{results.model || 'N/A'}</span>
               </div>
               <div className="detail-row">
                 <span className="label">Price:</span>
-                <span className="value">₹{results.price?.toLocaleString()}</span>
-              </div>
-              <div className="detail-row">
-                <span className="label">Hub:</span>
-                <span className="value">{results.hub}</span>
-              </div>
-              <div className="detail-row">
-                <span className="label">Booking Date:</span>
-                <span className="value">{results.bookingDate}</span>
+                <span className="value">{results.price ? `₹${results.price?.toLocaleString()}` : 'N/A'}</span>
               </div>
             </div>
-            <button onClick={handleDownload} className="download-button">
-              📥 Download Invoice (PDF)
-            </button>
+
+            <div className="action-buttons">
+              <a 
+                href={results.bookingUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="download-button"
+              >
+                💾 Download Invoice
+              </a>
+              <button 
+                onClick={() => {
+                  setResults(null);
+                  setVinNumber('');
+                  setSearchValue('');
+                }}
+                className="new-search-button"
+              >
+                🔍 New Search
+              </button>
+            </div>
           </div>
         )}
 
-        {/* Info Section */}
+        {/* Help Section */}
         <div className="info-section">
           <h4>ℹ️ How to use:</h4>
-          <ul>
-            <li>Get your booking ID from the URL: revoltmotors.com/thankyoubooking/<b>600445</b></li>
-            <li>Enter the ID range (e.g., 600445 to 600600)</li>
-            <li>Select search type: Phone, Name, or Email</li>
-            <li>Bot scans each booking page and matches your details</li>
-            <li>Click "Download Invoice" to open your booking page</li>
-            <li>Max range: 500 IDs per search</li>
-          </ul>
+          <ol>
+            <li>Find your <strong>VIN/Model Number</strong> (e.g., <code>RV26C188099</code>)</li>
+            <li>Select what you want to search (Phone, Name, or Email)</li>
+            <li>Enter your details</li>
+            <li>Click "Find Invoice"</li>
+            <li>Download your booking confirmation!</li>
+          </ol>
+          <p><strong>Note:</strong> Works with any Revolt model following the VIN pattern.</p>
         </div>
       </div>
     </div>
