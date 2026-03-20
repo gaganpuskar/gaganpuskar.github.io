@@ -3,14 +3,12 @@ services:
     name: revolt-backend
     runtime: node
     buildCommand: cd server && npm install
-    startCommand: cd server && npm start
+    startCommand: cd server && bash start-with-chrome.sh
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
         value: 5000
-      - key: PUPPETEER_SKIP_CHROMIUM_DOWNLOAD
-        value: 'false'
     envVars:
       - key: NODE_ENV
         value: production

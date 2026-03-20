@@ -4,9 +4,9 @@
   "description": "Express server for Revolt bike price search",
   "main": "index.js",
   "scripts": {
-    "start": "node startup.js",
+    "start": "bash start-with-chrome.sh",
     "dev": "nodemon index.js",
-    "postinstall": "npx puppeteer browsers install chrome"
+    "postinstall": "echo 'Postinstall executed'"
   },
   "dependencies": {
     "axios": "^1.13.6",
