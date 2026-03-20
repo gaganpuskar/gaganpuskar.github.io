@@ -5,11 +5,13 @@ import SearchBox from './components/SearchBox';
 import ResultsTable from './components/ResultsTable';
 import LoadingSpinner from './components/LoadingSpinner';
 import ErrorMessage from './components/ErrorMessage';
+import LoginPage from './components/LoginPage';
 
 // API URL configuration - use environment variable or localhost for development
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -17,8 +19,18 @@ function App() {
   const [hasSearched, setHasSearched] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
 
-  // Fetch available hubs for autocomplete
+  // Check if user is already authenticated on mount
   useEffect(() => {
+    const auth = localStorage.getItem('revolt_auth');
+    if (auth === 'true') {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  // Fetch available hubs for autocomplete (only when authenticated)
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
     const fetchHubs = async () => {
       try {
         const response = await axios.get(`${API_URL}/api/hubs`);
@@ -31,7 +43,21 @@ function App() {
     };
 
     fetchHubs();
-  }, []);
+  }, [isAuthenticated]);
+
+  const handleLogin = () => {
+    localStorage.setItem('revolt_auth', 'true');
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('revolt_auth');
+    setIsAuthenticated(false);
+    setSearchQuery('');
+    setResults([]);
+    setHasSearched(false);
+    setError(null);
+  };
 
   const handleSearch = async (hubName) => {
     if (!hubName.trim()) {
@@ -66,12 +92,24 @@ function App() {
     }
   };
 
+  // Show login page if not authenticated
+  if (!isAuthenticated) {
+    return <LoginPage onLogin={handleLogin} />;
+  }
+
   return (
     <div className="App">
       <div className="container">
         <header className="header">
-          <h1>🏍️ Revolt Bike Price Search</h1>
-          <p className="subtitle">Find Revolt bike prices by Hub Name</p>
+          <div className="header-content">
+            <div>
+              <h1>🏍️ Revolt Bike Price Search</h1>
+              <p className="subtitle">Find Revolt bike prices by Hub Name</p>
+            </div>
+            <button className="logout-button" onClick={handleLogout}>
+              Logout
+            </button>
+          </div>
         </header>
 
         <SearchBox

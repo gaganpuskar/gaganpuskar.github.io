@@ -33,17 +33,53 @@ body {
   animation: slideDown 0.6s ease-out;
 }
 
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.header-content > div {
+  flex: 1;
+}
+
 .header h1 {
   font-size: 2.5rem;
   margin-bottom: 10px;
   font-weight: 700;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  text-align: left;
 }
 
 .header .subtitle {
   font-size: 1.1rem;
   opacity: 0.9;
   font-weight: 300;
+  text-align: left;
+}
+
+.logout-button {
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 2px solid white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.logout-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.logout-button:active {
+  transform: translateY(0);
 }
 
 /* Search Box */
@@ -306,6 +342,29 @@ body {
 @media (max-width: 768px) {
   .header h1 {
     font-size: 1.8rem;
+  }
+
+  .header-content {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .header-content > div {
+    width: 100%;
+  }
+
+  .header h1 {
+    text-align: center;
+  }
+
+  .header .subtitle {
+    text-align: center;
+  }
+
+  .logout-button {
+    width: 100%;
   }
 
   .search-input-wrapper {
