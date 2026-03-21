@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/BookingConverter.css';
 
 function BookingConverter() {
   const [bookingNumber, setBookingNumber] = useState('');
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
+  const [opened, setOpened] = useState(false);
 
-  const handleConvert = (e) => {
-    e.preventDefault();
-    
+  // Real-time conversion as user types
+  useEffect(() => {
     if (!bookingNumber.trim()) {
-      setError('Please enter a booking number');
+      setError(null);
       setResult(null);
+      setOpened(false);
       return;
     }
 
@@ -19,6 +20,7 @@ function BookingConverter() {
     if (isNaN(num)) {
       setError('Please enter a valid number');
       setResult(null);
+      setOpened(false);
       return;
     }
 
@@ -26,13 +28,21 @@ function BookingConverter() {
     const bookingId = num + 412004;
     const url = `https://www.revoltmotors.com/thankyoubooking/${bookingId}`;
 
-    setResult({
+    const newResult = {
       input: num,
       bookingId: bookingId,
       url: url
-    });
+    };
+
+    setResult(newResult);
     setError(null);
-  };
+
+    // Auto-open URL if not already opened
+    if (!opened) {
+      window.open(url, '_blank');
+      setOpened(true);
+    }
+  }, [bookingNumber, opened]);
 
   return (
     <div className="booking-converter-container">
@@ -44,7 +54,7 @@ function BookingConverter() {
 
         {error && <div className="error-message">❌ {error}</div>}
 
-        <form onSubmit={handleConvert} className="converter-form">
+        <div className="converter-form">
           <div className="form-section">
             <label htmlFor="bookingNumber"><strong>Booking Number</strong></label>
             <input
@@ -56,36 +66,21 @@ function BookingConverter() {
               className="booking-input"
               autoFocus
             />
-            <small>📝 Enter your booking number</small>
+            <small>📝 Enter your booking number - URL opens automatically!</small>
           </div>
-
-          <button 
-            type="submit" 
-            className="convert-button"
-          >
-            🔄 Convert
-          </button>
-        </form>
+        </div>
 
         {result && (
           <div className="result-section">
-            <div className="success-message">✅ Conversion Successful!</div>
+            <div className="success-message">✅ Formula Calculated & URL Opened!</div>
             
             <div className="result-details">
               <div className="result-row">
-                <span className="label">Input Number:</span>
-                <span className="value">{result.input}</span>
-              </div>
-              <div className="result-row">
                 <span className="label">Formula:</span>
-                <span className="value">{result.input} + 412004 = {result.bookingId}</span>
+                <span className="value"><strong>{result.input} + 412004 = {result.bookingId}</strong></span>
               </div>
               <div className="result-row">
-                <span className="label">Booking ID:</span>
-                <span className="value">{result.bookingId}</span>
-              </div>
-              <div className="result-row">
-                <span className="label">URL:</span>
+                <span className="label">Your URL:</span>
                 <span className="value url-text">{result.url}</span>
               </div>
             </div>
@@ -97,13 +92,14 @@ function BookingConverter() {
                 rel="noopener noreferrer"
                 className="open-button"
               >
-                🌐 Open URL
+                🌐 Open Again
               </a>
               <button 
                 onClick={() => {
                   setResult(null);
                   setBookingNumber('');
                   setError(null);
+                  setOpened(false);
                 }}
                 className="new-convert-button"
               >
@@ -118,9 +114,9 @@ function BookingConverter() {
           <h4>ℹ️ How it works:</h4>
           <ol>
             <li>Enter your <strong>Booking Number</strong></li>
-            <li>Click "Convert"</li>
-            <li>Formula: Booking Number + 412004 = URL ID</li>
-            <li>Click "Open URL" to view on Revolt Motors</li>
+            <li>Formula automatically displays: <code>Number + 412004 = Result</code></li>
+            <li>URL opens automatically in a new tab!</li>
+            <li>View your booking details on Revolt Motors</li>
           </ol>
           <p><strong>Examples:</strong></p>
           <ul>
