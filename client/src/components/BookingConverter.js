@@ -108,22 +108,6 @@ function BookingConverter() {
             </div>
           </div>
         )}
-
-        {/* Help Section */}
-        <div className="info-section">
-          <h4>ℹ️ How it works:</h4>
-          <ol>
-            <li>Enter your <strong>Booking Number</strong></li>
-            <li>Formula automatically displays: <code>Number + 412004 = Result</code></li>
-            <li>URL opens automatically in a new tab!</li>
-            <li>View your booking details on Revolt Motors</li>
-          </ol>
-          <p><strong>Examples:</strong></p>
-          <ul>
-            <li><code>188196</code> → <code>600200</code></li>
-            <li><code>188197</code> → <code>600201</code></li>
-          </ul>
-        </div>
       </div>
     </div>
   );
