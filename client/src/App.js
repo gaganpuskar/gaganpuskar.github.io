@@ -6,12 +6,15 @@ import ResultsTable from './components/ResultsTable';
 import LoadingSpinner from './components/LoadingSpinner';
 import ErrorMessage from './components/ErrorMessage';
 import LoginPage from './components/LoginPage';
+import BookingConverter from './components/BookingConverter';
+import './styles/BookingConverter.css';
 
 // API URL configuration - use environment variable or localhost for development
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [activeTab, setActiveTab] = useState('search');
   const [searchQuery, setSearchQuery] = useState('');
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -53,6 +56,7 @@ function App() {
   const handleLogout = () => {
     localStorage.removeItem('revolt_auth');
     setIsAuthenticated(false);
+    setActiveTab('search');
     setSearchQuery('');
     setResults([]);
     setHasSearched(false);
@@ -107,6 +111,18 @@ function App() {
               <p className="subtitle">Find Revolt bike prices by Hub Name</p>
             </div>
             <div className="header-buttons">
+              <button 
+                className={`tab-button ${activeTab === 'search' ? 'active' : ''}`}
+                onClick={() => setActiveTab('search')}
+              >
+                🏍️ Price Search
+              </button>
+              <button 
+                className={`tab-button ${activeTab === 'converter' ? 'active' : ''}`}
+                onClick={() => setActiveTab('converter')}
+              >
+                🔗 Booking Converter
+              </button>
               <button className="logout-button" onClick={handleLogout}>
                 Logout
               </button>
@@ -114,24 +130,30 @@ function App() {
           </div>
         </header>
 
-        <SearchBox
-          onSearch={handleSearch}
-          suggestions={suggestions}
-          value={searchQuery}
-          onChange={setSearchQuery}
-        />
+        {activeTab === 'search' && (
+          <>
+            <SearchBox
+              onSearch={handleSearch}
+              suggestions={suggestions}
+              value={searchQuery}
+              onChange={setSearchQuery}
+            />
 
-        {error && !loading && <ErrorMessage message={error} />}
+            {error && !loading && <ErrorMessage message={error} />}
 
-        {loading && <LoadingSpinner />}
+            {loading && <LoadingSpinner />}
 
-        {hasSearched && !loading && results.length > 0 && (
-          <ResultsTable results={results} />
+            {hasSearched && !loading && results.length > 0 && (
+              <ResultsTable results={results} />
+            )}
+
+            {hasSearched && !loading && results.length === 0 && !error && (
+              <div className="no-results">No bikes found for this hub</div>
+            )}
+          </>
         )}
 
-        {hasSearched && !loading && results.length === 0 && !error && (
-          <div className="no-results">No bikes found for this hub</div>
-        )}
+        {activeTab === 'converter' && <BookingConverter />}
       </div>
     </div>
   );
