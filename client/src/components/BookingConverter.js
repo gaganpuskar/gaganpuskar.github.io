@@ -75,19 +75,8 @@ function BookingConverter() {
 
         {result && (
           <div className="result-section">
-            <div className="success-message">✅ Formula Calculated & URL Opened!</div>
+            <div className="success-message">✅ URL Opened Successfully!</div>
             
-            <div className="result-details">
-              <div className="result-row">
-                <span className="label">Formula:</span>
-                <span className="value"><strong>{result.input} + 412004 = {result.bookingId}</strong></span>
-              </div>
-              <div className="result-row">
-                <span className="label">Your URL:</span>
-                <span className="value url-text">{result.url}</span>
-              </div>
-            </div>
-
             <div className="action-buttons">
               <a 
                 href={result.url}
