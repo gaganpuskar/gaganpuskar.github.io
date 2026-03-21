@@ -1,18 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import '../styles/BookingConverter.css';
 
 function BookingConverter() {
   const [bookingNumber, setBookingNumber] = useState('');
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
-  const lastOpenedRef = useRef(null);
 
-  // Real-time conversion as user types
-  useEffect(() => {
+  const handleOk = () => {
     if (!bookingNumber.trim()) {
-      setError(null);
+      setError('Please enter a booking number');
       setResult(null);
-      lastOpenedRef.current = null;
       return;
     }
 
@@ -36,12 +33,9 @@ function BookingConverter() {
     setResult(newResult);
     setError(null);
 
-    // Auto-open URL only if this is a new booking number
-    if (lastOpenedRef.current !== bookingId) {
-      window.open(url, '_blank');
-      lastOpenedRef.current = bookingId;
-    }
-  }, [bookingNumber]);
+    // Open URL when OK is clicked
+    window.open(url, '_blank');
+  };
 
   return (
     <div className="booking-converter-container">
@@ -56,16 +50,26 @@ function BookingConverter() {
         <div className="converter-form">
           <div className="form-section">
             <label htmlFor="bookingNumber"><strong>Booking Number</strong></label>
-            <input
-              id="bookingNumber"
-              type="number"
-              placeholder="e.g., 188196"
-              value={bookingNumber}
-              onChange={(e) => setBookingNumber(e.target.value)}
-              className="booking-input"
-              autoFocus
-            />
-            <small>📝 Enter your booking number - URL opens automatically!</small>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <input
+                id="bookingNumber"
+                type="number"
+                placeholder="e.g., 188196"
+                value={bookingNumber}
+                onChange={(e) => setBookingNumber(e.target.value)}
+                className="booking-input"
+                style={{ flex: 1 }}
+                autoFocus
+              />
+              <button 
+                onClick={handleOk}
+                className="convert-button"
+                style={{ flex: 0 }}
+              >
+                OK
+              </button>
+            </div>
+            <small>📝 Enter your booking number and click OK</small>
           </div>
         </div>
 
@@ -98,7 +102,6 @@ function BookingConverter() {
                   setResult(null);
                   setBookingNumber('');
                   setError(null);
-                  lastOpenedRef.current = null;
                 }}
                 className="new-convert-button"
               >
