@@ -6,14 +6,12 @@ import ResultsTable from './components/ResultsTable';
 import LoadingSpinner from './components/LoadingSpinner';
 import ErrorMessage from './components/ErrorMessage';
 import LoginPage from './components/LoginPage';
-import InvoiceFinder from './components/InvoiceFinder';
 
 // API URL configuration - use environment variable or localhost for development
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [activeTab, setActiveTab] = useState('search'); // 'search' or 'invoices'
   const [searchQuery, setSearchQuery] = useState('');
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -101,72 +99,40 @@ function App() {
 
   return (
     <div className="App">
-      {activeTab === 'search' ? (
-        <div className="container">
-          <header className="header">
-            <div className="header-content">
-              <div>
-                <h1>🏍️ Revolt Bike Price Search</h1>
-                <p className="subtitle">Find Revolt bike prices by Hub Name</p>
-              </div>
-              <div className="header-buttons">
-                <button 
-                  className="nav-button nav-button-secondary" 
-                  onClick={() => setActiveTab('invoices')}
-                >
-                  📄 Invoice Finder
-                </button>
-                <button className="logout-button" onClick={handleLogout}>
-                  Logout
-                </button>
-              </div>
+      <div className="container">
+        <header className="header">
+          <div className="header-content">
+            <div>
+              <h1>🏍️ Revolt Bike Price Search</h1>
+              <p className="subtitle">Find Revolt bike prices by Hub Name</p>
             </div>
-          </header>
-
-          <SearchBox
-            onSearch={handleSearch}
-            suggestions={suggestions}
-            value={searchQuery}
-            onChange={setSearchQuery}
-          />
-
-          {error && !loading && <ErrorMessage message={error} />}
-
-          {loading && <LoadingSpinner />}
-
-          {hasSearched && !loading && results.length > 0 && (
-            <ResultsTable results={results} />
-          )}
-
-          {hasSearched && !loading && results.length === 0 && !error && (
-            <div className="no-results">No bikes found for this hub</div>
-          )}
-        </div>
-      ) : (
-        <div className="container">
-          <header className="header">
-            <div className="header-content">
-              <div>
-                <h1>📄 Invoice Finder</h1>
-                <p className="subtitle">Search and download booking invoices</p>
-              </div>
-              <div className="header-buttons">
-                <button 
-                  className="nav-button nav-button-secondary" 
-                  onClick={() => setActiveTab('search')}
-                >
-                  🏍️ Price Search
-                </button>
-                <button className="logout-button" onClick={handleLogout}>
-                  Logout
-                </button>
-              </div>
+            <div className="header-buttons">
+              <button className="logout-button" onClick={handleLogout}>
+                Logout
+              </button>
             </div>
-          </header>
+          </div>
+        </header>
 
-          <InvoiceFinder apiUrl={API_URL} />
-        </div>
-      )}
+        <SearchBox
+          onSearch={handleSearch}
+          suggestions={suggestions}
+          value={searchQuery}
+          onChange={setSearchQuery}
+        />
+
+        {error && !loading && <ErrorMessage message={error} />}
+
+        {loading && <LoadingSpinner />}
+
+        {hasSearched && !loading && results.length > 0 && (
+          <ResultsTable results={results} />
+        )}
+
+        {hasSearched && !loading && results.length === 0 && !error && (
+          <div className="no-results">No bikes found for this hub</div>
+        )}
+      </div>
     </div>
   );
 }
