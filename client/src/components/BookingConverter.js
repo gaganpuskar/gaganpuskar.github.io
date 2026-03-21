@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import '../styles/BookingConverter.css';
 
 function BookingConverter() {
   const [bookingNumber, setBookingNumber] = useState('');
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
-  const [opened, setOpened] = useState(false);
+  const lastOpenedRef = useRef(null);
 
   // Real-time conversion as user types
   useEffect(() => {
     if (!bookingNumber.trim()) {
       setError(null);
       setResult(null);
-      setOpened(false);
+      lastOpenedRef.current = null;
       return;
     }
 
@@ -20,7 +20,6 @@ function BookingConverter() {
     if (isNaN(num)) {
       setError('Please enter a valid number');
       setResult(null);
-      setOpened(false);
       return;
     }
 
@@ -37,12 +36,12 @@ function BookingConverter() {
     setResult(newResult);
     setError(null);
 
-    // Auto-open URL if not already opened
-    if (!opened) {
+    // Auto-open URL only if this is a new booking number
+    if (lastOpenedRef.current !== bookingId) {
       window.open(url, '_blank');
-      setOpened(true);
+      lastOpenedRef.current = bookingId;
     }
-  }, [bookingNumber, opened]);
+  }, [bookingNumber]);
 
   return (
     <div className="booking-converter-container">
@@ -99,7 +98,7 @@ function BookingConverter() {
                   setResult(null);
                   setBookingNumber('');
                   setError(null);
-                  setOpened(false);
+                  lastOpenedRef.current = null;
                 }}
                 className="new-convert-button"
               >
