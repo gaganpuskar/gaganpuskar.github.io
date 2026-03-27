@@ -120,7 +120,7 @@ const TaskTracker = () => {
     const [statusFilter, setStatusFilter] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [currentSort, setCurrentSort] = useState({ column: 'agent', ascending: true });
-    const itemsPerPage = 10;
+    const itemsPerPage = 30;
 
     // Update metrics on data change
     const getMetrics = () => {
