@@ -283,6 +283,7 @@ const TaskTracker = () => {
                 <table className="data-table">
                     <thead>
                         <tr>
+                            <th>Sr No</th>
                             <th onClick={() => handleSort('agent')}>Agent Name ⬍</th>
                             <th onClick={() => handleSort('status')}>Status ⬍</th>
                             <th onClick={() => handleSort('customer')}>Customer # ⬍</th>
@@ -298,6 +299,7 @@ const TaskTracker = () => {
                     <tbody>
                         {paginatedData.map((row, idx) => (
                             <tr key={idx}>
+                                <td className="sr-no">{startIndex + idx + 1}</td>
                                 <td>{row.agent}</td>
                                 <td>
                                     <span className={`status-badge ${row.status.toLowerCase().replace(' ', '-')}`}>
