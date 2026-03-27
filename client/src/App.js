@@ -7,7 +7,9 @@ import LoadingSpinner from './components/LoadingSpinner';
 import ErrorMessage from './components/ErrorMessage';
 import LoginPage from './components/LoginPage';
 import BookingConverter from './components/BookingConverter';
+import TaskTracker from './components/TaskTracker';
 import './styles/BookingConverter.css';
+import './styles/TaskTracker.css';
 
 // API URL configuration - use environment variable or localhost for development
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
@@ -16,6 +18,7 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [activeTab, setActiveTab] = useState('search');
   const [searchQuery, setSearchQuery] = useState('');
+  const [trackerData, setTrackerData] = useState(null);
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -123,6 +126,12 @@ function App() {
               >
                 🔗 Booking Converter
               </button>
+              <button 
+                className={`tab-button ${activeTab === 'tracker' ? 'active' : ''}`}
+                onClick={() => setActiveTab('tracker')}
+              >
+                📊 Tracker
+              </button>
               <button className="logout-button" onClick={handleLogout}>
                 Logout
               </button>
@@ -154,6 +163,8 @@ function App() {
         )}
 
         {activeTab === 'converter' && <BookingConverter />}
+
+        {activeTab === 'tracker' && <TaskTracker />}
       </div>
     </div>
   );
