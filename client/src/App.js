@@ -11,6 +11,7 @@ import TaskTracker from './components/TaskTracker';
 import './styles/BookingConverter.css';
 import './styles/TaskTracker.css';
 
+// Deployment version: 2.0 - TaskTracker visible with Sr No and 30 items per page
 // API URL configuration - use environment variable or localhost for development
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
@@ -111,7 +112,7 @@ function App() {
           <div className="header-content">
             <div>
               <h1>🏍️ Revolt Bike Price Search</h1>
-              <p className="subtitle">Find Revolt bike prices by Hub Name</p>
+              <p className="subtitle">Find Revolt bike prices by Hub Name | Version 2.0</p>
             </div>
             <div className="header-buttons">
               <button 
