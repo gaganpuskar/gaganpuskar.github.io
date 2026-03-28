@@ -112,8 +112,6 @@ const SAMPLE_DATA = [
     { agent: "Aman", status: "Created", customer: "8964866489", source: "", subsource: "", hub: "", booking: "RV26C189215", date: "2026-03-27", profession: "", model: "" },
     { agent: "Geeta", status: "Created", customer: "6206099919", source: "", subsource: "", hub: "", booking: "RV26C189303", date: "2026-03-27", profession: "", model: "" },
     { agent: "Tannu Sangwan", status: "Created", customer: "9370761100", source: "", subsource: "", hub: "", booking: "RV26C189269", date: "2026-03-27", profession: "", model: "" },
-    { agent: "Shushmita", status: "Created", customer: "9437531381", source: "", subsource: "", hub: "", booking: "RV26C189380", date: "2026-03-28", profession: "Odisha Police", model: "" },
-    { agent: "Aman", status: "Created", customer: "8285773987", source: "", subsource: "", hub: "", booking: "RV26C189372", date: "2026-03-28", profession: "Bag Manufacturing", model: "" },
     { agent: "Sushmita", status: "Created", customer: "9179915176", source: "", subsource: "", hub: "", booking: "RV26C189414", date: "2026-03-28", profession: "Construction", model: "" },
     { agent: "Geeta", status: "Created", customer: "8298888008", source: "", subsource: "", hub: "", booking: "RV26C189433", date: "2026-03-28", profession: "", model: "" },
     { agent: "Aman", status: "Created", customer: "9694134505", source: "", subsource: "", hub: "", booking: "RV26C189429", date: "2026-03-28", profession: "Job", model: "" },
