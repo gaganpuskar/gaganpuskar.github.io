@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gagan Puskar | Data Analyst</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Scroll progress bar -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- Animated background -->
+  <div class="bg-blobs">
+    <span class="blob blob-1"></span>
+    <span class="blob blob-2"></span>
+    <span class="blob blob-3"></span>
+  </div>
+  <div class="bg-grid"></div>
+
+  <!-- Navbar -->
+  <header class="navbar" id="navbar">
+    <div class="container nav-inner">
+      <a href="#home" class="logo">GP<span>.</span></a>
+      <nav class="nav-links" id="navLinks">
+        <a href="#home" class="active">Home</a>
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#experience">Experience</a>
+        <a href="#projects">Projects</a>
+        <a href="#education">Education</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero" id="home">
+    <div class="container hero-inner">
+      <div class="hero-text">
+        <span class="badge"><span class="pulse"></span> Open to Internships</span>
+        <h1>Hi, I'm <span class="grad">Gagan Puskar</span> <span class="wave">👋</span></h1>
+        <h2 class="typed-wrap">I'm a <span class="typed" id="typed"></span><span class="cursor">|</span></h2>
+        <p class="hero-desc">
+          Motivated B.Tech IT student skilled in Python, SQL, Excel &amp; Data Analytics.
+          Passionate about solving business problems using data-driven insights and dashboards.
+        </p>
+        <div class="hero-btns">
+          <a href="#projects" class="btn btn-primary"><i class="fa-solid fa-rocket"></i> View Projects</a>
+          <a href="#contact" class="btn btn-ghost"><i class="fa-solid fa-paper-plane"></i> Contact Me</a>
+          <button class="btn btn-ghost" id="downloadCv"><i class="fa-solid fa-download"></i> Résumé</button>
+        </div>
+        <div class="socials">
+          <a href="mailto:er.gaganpuskar@gmail.com" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+          <a href="tel:+916398130566" aria-label="Phone"><i class="fa-solid fa-phone"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+          <a href="#" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="avatar-ring">
+          <div class="avatar">GP</div>
+          <span class="orbit orbit-python"><i class="fa-brands fa-python"></i></span>
+          <span class="orbit orbit-sql"><i class="fa-solid fa-database"></i></span>
+          <span class="orbit orbit-pbi"><i class="fa-solid fa-chart-column"></i></span>
+          <span class="orbit orbit-excel"><i class="fa-solid fa-table-cells"></i></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="section" id="about">
+    <div class="container">
+      <p class="eyebrow">Get to know me</p>
+      <h2 class="section-title">About Me</h2>
+      <div class="about-grid">
+        <div class="about-text glass">
+          <p>
+            I'm a motivated <strong>B.Tech (Information Technology)</strong> student with hands-on
+            knowledge of Python, SQL, Excel, and Data Analytics. I love turning raw data into clear,
+            actionable insights through clean dashboards and reports.
+          </p>
+          <p>
+            I'm currently looking for a <strong>Data Analyst Internship</strong> to enhance my
+            analytical and technical skills while delivering real business value.
+          </p>
+        </div>
+        <div class="stats">
+          <div class="stat glass"><span class="num" data-target="3" data-suffix="+">0</span><p>Roles &amp; Internships</p></div>
+          <div class="stat glass"><span class="num" data-target="2">0</span><p>Dashboard Projects</p></div>
+          <div class="stat glass"><span class="num" data-target="3">0</span><p>Certifications</p></div>
+          <div class="stat glass"><span class="num" data-target="4">0</span><p>Core Tools</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section class="section alt" id="skills">
+    <div class="container">
+      <p class="eyebrow">What I work with</p>
+      <h2 class="section-title">Skills &amp; Tools</h2>
+      <div class="skills-grid">
+        <div class="skill-bars glass">
+          <div class="bar"><div class="bar-top"><span>Python</span><span>85%</span></div><div class="track"><div class="fill" data-w="85%"></div></div></div>
+          <div class="bar"><div class="bar-top"><span>SQL</span><span>80%</span></div><div class="track"><div class="fill" data-w="80%"></div></div></div>
+          <div class="bar"><div class="bar-top"><span>Power BI</span><span>78%</span></div><div class="track"><div class="fill" data-w="78%"></div></div></div>
+          <div class="bar"><div class="bar-top"><span>MS Excel</span><span>88%</span></div><div class="track"><div class="fill" data-w="88%"></div></div></div>
+          <div class="bar"><div class="bar-top"><span>Data Analysis</span><span>82%</span></div><div class="track"><div class="fill" data-w="82%"></div></div></div>
+        </div>
+        <div class="chips glass">
+          <h3>Also familiar with</h3>
+          <div class="chip-list">
+            <span class="chip"><i class="fa-solid fa-diagram-project"></i> OOPs Concepts</span>
+            <span class="chip"><i class="fa-brands fa-html5"></i> HTML</span>
+            <span class="chip"><i class="fa-brands fa-css3-alt"></i> CSS</span>
+            <span class="chip"><i class="fa-solid fa-chart-pie"></i> Data Visualization</span>
+            <span class="chip"><i class="fa-solid fa-lightbulb"></i> Problem Solving</span>
+            <span class="chip"><i class="fa-solid fa-magnifying-glass-chart"></i> Trend Analysis</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience (reverse-chronological, most recent first) -->
+  <section class="section" id="experience">
+    <div class="container">
+      <p class="eyebrow">My journey</p>
+      <h2 class="section-title">Experience</h2>
+      <div class="timeline">
+        <div class="t-item">
+          <div class="t-dot"></div>
+          <div class="t-card glass">
+            <span class="t-date">Apr 2026 – Present</span>
+            <h3>Industry-Integrated Intern</h3>
+            <p class="t-company">Pantech eLearning</p>
+            <ul>
+              <li>Worked on industry-based analytics projects.</li>
+              <li>Improved practical knowledge of Python, SQL, and reporting.</li>
+              <li>Assisted in project documentation and data handling.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="t-item">
+          <div class="t-dot"></div>
+          <div class="t-card glass">
+            <span class="t-date">Feb 2026 – Apr 2026</span>
+            <h3>IT Customer Service Associate <span class="tag-mini">Trainee</span></h3>
+            <p class="t-company">Fusion CX</p>
+            <ul>
+              <li>Handled customer support and issue resolution.</li>
+              <li>Improved communication and analytical problem-solving skills.</li>
+              <li>Worked in a professional corporate environment.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="t-item">
+          <div class="t-dot"></div>
+          <div class="t-card glass">
+            <span class="t-date">Sep 2025 – Feb 2026</span>
+            <h3>Data Analyst <span class="tag-mini">Freelance</span></h3>
+            <p class="t-company">Anjali Civil Construction, Bareilly</p>
+            <ul>
+              <li>Analyzed business and financial datasets using Excel.</li>
+              <li>Created reports for business insights.</li>
+              <li>Worked on data cleaning and trend analysis.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section class="section alt" id="projects">
+    <div class="container">
+      <p class="eyebrow">Things I've built</p>
+      <h2 class="section-title">Projects</h2>
+      <div class="proj-grid">
+        <article class="proj-card glass">
+          <div class="proj-icon"><i class="fa-solid fa-shield-heart"></i></div>
+          <h3>Insurance Claim Analysis Dashboard</h3>
+          <p>Built an analytics dashboard to analyze healthcare claim trends and detect suspicious patterns, generating reports for decision-making.</p>
+          <div class="tech"><span>Python</span><span>SQL</span><span>Power BI</span></div>
+        </article>
+        <article class="proj-card glass">
+          <div class="proj-icon"><i class="fa-solid fa-chart-line"></i></div>
+          <h3>Sales &amp; Revenue Analytics Dashboard</h3>
+          <p>Tracked sales performance and KPIs, performed customer &amp; revenue trend analysis, and visualized monthly growth and region-wise performance.</p>
+          <div class="tech"><span>Power BI</span><span>Data Analysis</span></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Education & Certifications -->
+  <section class="section" id="education">
+    <div class="container">
+      <p class="eyebrow">Background</p>
+      <h2 class="section-title">Education &amp; Certifications</h2>
+      <div class="edu-grid">
+        <div class="edu-col glass">
+          <h3><i class="fa-solid fa-graduation-cap"></i> Education</h3>
+          <div class="edu-item">
+            <h4>B.Tech — Information Technology</h4>
+            <p>Rajshree Institute of Management and Technology, Bareilly</p>
+          </div>
+          <div class="edu-item">
+            <h4>Intermediate (12th)</h4>
+            <p>UPMSP Board</p>
+          </div>
+        </div>
+        <div class="edu-col glass">
+          <h3><i class="fa-solid fa-certificate"></i> Certifications</h3>
+          <ul class="cert-list">
+            <li><i class="fa-solid fa-check"></i> Python Programming Certification</li>
+            <li><i class="fa-solid fa-check"></i> SQL for Data Analysis</li>
+            <li><i class="fa-solid fa-check"></i> Excel / Power BI Certification</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="section alt" id="contact">
+    <div class="container">
+      <p class="eyebrow">Let's talk</p>
+      <h2 class="section-title">Get In Touch</h2>
+      <div class="contact-grid">
+        <div class="contact-info">
+          <a href="mailto:er.gaganpuskar@gmail.com" class="ci glass"><i class="fa-solid fa-envelope"></i><div><span>Email</span><p>er.gaganpuskar@gmail.com</p></div></a>
+          <a href="tel:+916398130566" class="ci glass"><i class="fa-solid fa-phone"></i><div><span>Phone</span><p>+91-6398130566</p></div></a>
+          <div class="ci glass"><i class="fa-solid fa-location-dot"></i><div><span>Location</span><p>Gurgaon / Bareilly</p></div></div>
+        </div>
+        <form class="contact-form glass" id="contactForm">
+          <div class="field"><input type="text" id="name" required /><label>Your Name</label></div>
+          <div class="field"><input type="email" id="email" required /><label>Your Email</label></div>
+          <div class="field"><textarea id="message" rows="4" required></textarea><label>Your Message</label></div>
+          <button type="submit" class="btn btn-primary full"><i class="fa-solid fa-paper-plane"></i> Send Message</button>
+          <p class="form-note" id="formNote"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> Gagan Puskar — Built with HTML, CSS &amp; JS.</p>
+      <a href="#home" class="back-top" aria-label="Back to top"><i class="fa-solid fa-arrow-up"></i></a>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
