@@ -69,14 +69,7 @@ const io = new IntersectionObserver(entries => {
 }, { threshold: .2 });
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
-// Contact form
-document.getElementById('contactForm').addEventListener('submit', e => {
-  e.preventDefault();
-  const note = document.getElementById('formNote');
-  note.textContent = 'Thanks! Your message has been recorded. 🎉';
-  e.target.reset();
-  setTimeout(() => note.textContent = '', 4000);
-});
+// Formspree contact form - handles submission via POST
 
 // Résumé button
 document.getElementById('downloadCv').addEventListener('click', () => {
