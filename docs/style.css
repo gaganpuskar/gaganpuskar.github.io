@@ -73,7 +73,7 @@ a{text-decoration:none;color:inherit}
 
 /* Avatar */
 .hero-visual{display:grid;place-items:center}
-.avatar-ring{position:relative;width:320px;height:320px;display:grid;place-items:center}
+.avatar-ring{position:relative;width:310px;height:310px;display:grid;place-items:center}
 .avatar-ring::before{content:"";position:absolute;inset:0;border-radius:50%;border:2px dashed var(--border);animation:spin 20s linear infinite}
 .avatar{width:210px;height:210px;border-radius:50%;background:linear-gradient(135deg,var(--grad1),var(--grad2));display:grid;place-items:center;font-size:3.6rem;font-weight:800;color:#fff;box-shadow:var(--shadow);object-fit:cover}
 @keyframes spin{to{transform:rotate(360deg)}}
