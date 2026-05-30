@@ -247,13 +247,15 @@
           <a href="tel:+916398130566" class="ci glass"><i class="fa-solid fa-phone"></i><div><span>Phone</span><p>+91-6398130566</p></div></a>
           <div class="ci glass"><i class="fa-solid fa-location-dot"></i><div><span>Location</span><p>Gurgaon / Bareilly</p></div></div>
         </div>
-        <form class="contact-form glass" id="contactForm">
-          <div class="field"><input type="text" id="name" required /><label>Your Name</label></div>
-          <div class="field"><input type="email" id="email" required /><label>Your Email</label></div>
-          <div class="field"><textarea id="message" rows="4" required></textarea><label>Your Message</label></div>
-          <button type="submit" class="btn btn-primary full"><i class="fa-solid fa-paper-plane"></i> Send Message</button>
-          <p class="form-note" id="formNote"></p>
-        </form>
+        <div class="contactForm glass">
+          <form action="https://formspree.io/f/xldenqnj" method="post">
+            <input type="text" placeholder="Name" name="name" required />
+            <input type="email" placeholder="Email" name="email" required />
+            <input type="text" placeholder="Subject" name="subject" required />
+            <textarea placeholder="Message" required rows="5" cols="23" name="message"></textarea>
+            <button type="submit" class="submitForm">Send Message</button>
+          </form>
+        </div>
       </div>
     </div>
   </section>

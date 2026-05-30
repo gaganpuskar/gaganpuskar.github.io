@@ -163,6 +163,12 @@ a{text-decoration:none;color:inherit}
 .field input:focus,.field textarea:focus{outline:none;border-color:var(--grad2)}
 .field input:focus+label,.field input:valid+label,.field textarea:focus+label,.field textarea:valid+label{top:-9px;font-size:.78rem;color:var(--grad2)}
 .form-note{margin-top:12px;text-align:center;color:#22c55e;font-weight:500;min-height:1.2em}
+.contactForm{padding:30px}
+.contactForm form{display:flex;flex-direction:column;gap:18px}
+.contactForm input,.contactForm textarea{width:100%;padding:12px 14px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:inherit;font-size:1rem;resize:none;transition:.2s}
+.contactForm input:focus,.contactForm textarea:focus{outline:none;border-color:var(--grad2);box-shadow:0 0 0 3px rgba(124,92,255,.1)}
+.submitForm{padding:12px 24px;background:linear-gradient(90deg,var(--grad1),var(--grad2));color:#fff;border:none;border-radius:10px;font-weight:600;cursor:pointer;font-family:inherit;font-size:.95rem;transition:.25s;margin-top:6px}
+.submitForm:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(124,92,255,.3)}
 
 /* Footer */
 .footer{padding:30px 0;border-top:1px solid var(--border)}
