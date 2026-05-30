@@ -75,7 +75,7 @@ a{text-decoration:none;color:inherit}
 .hero-visual{display:grid;place-items:center}
 .avatar-ring{position:relative;width:280px;height:280px;display:grid;place-items:center}
 .avatar-ring::before{content:"";position:absolute;inset:0;border-radius:50%;border:2px dashed var(--border);animation:spin 20s linear infinite}
-.avatar{width:180px;height:180px;border-radius:50%;background:linear-gradient(135deg,var(--grad1),var(--grad2));display:grid;place-items:center;font-size:3.6rem;font-weight:800;color:#fff;box-shadow:var(--shadow)}
+.avatar{width:180px;height:180px;border-radius:50%;background:linear-gradient(135deg,var(--grad1),var(--grad2));display:grid;place-items:center;font-size:3.6rem;font-weight:800;color:#fff;box-shadow:var(--shadow);object-fit:cover}
 @keyframes spin{to{transform:rotate(360deg)}}
 .orbit{position:absolute;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:var(--surface);border:1px solid var(--border);font-size:1.2rem;animation:bob 4s ease-in-out infinite}
 .orbit-python{top:0;left:50%;transform:translateX(-50%);color:#ffd43b}
