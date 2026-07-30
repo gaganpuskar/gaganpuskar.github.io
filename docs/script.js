@@ -28,7 +28,13 @@ hamburger.addEventListener('click', () => { hamburger.classList.toggle('open'); 
 navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { hamburger.classList.remove('open'); navLinks.classList.remove('open'); }));
 
 // Typing effect
-const roles = ['Data Analyst','Python Developer','SQL Enthusiast','Power BI Specialist','Problem Solver'];
+const roles = [
+  'MERN Stack Developer',
+  'Full-Stack Developer',
+  'React.js Specialist',
+  'Node.js & Backend Developer',
+  'Web Solution Provider'
+];
 const typed = document.getElementById('typed');
 let ri = 0, ci = 0, deleting = false;
 function type(){
